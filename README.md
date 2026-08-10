@@ -9,8 +9,12 @@ This repository contains an interactive Jupyter Notebook project that explores s
    git clone https://github.com/omarmushtaq-create/4th-Down-decider.git
    cd 4th-Down-decider
    ```
+2. **Install Required Packages**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-2. **Run the script**:
+3. **Run the script**:
    ```bash
    python script.py
    ```
