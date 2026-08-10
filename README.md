@@ -1,13 +1,30 @@
 # 4th-Down-decider
 
-This repository contains an interactive Jupyter Notebook project that explores strategies for deciding whether to attempt a 4th down conversion in American football. The primary work is in Jupyter Notebooks, with supporting static assets (HTML/CSS) used for display or presentation.
+This repository contains an interactive Jupyter Notebook project that explores strategies for deciding whether to attempt a 4th down conversion in American football. The primary work is in Jupyter Notebooks, with an interactive website built with HTML, CSS, and Python.
 
-## What’s inside
+## Quick Start
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/omarmushtaq-create/4th-Down-decider.git
+   cd 4th-Down-decider
+   ```
+
+2. **Run the script**:
+   ```bash
+   python script.py
+   ```
+   This will start a local server. Open your browser and navigate to the URL displayed in the terminal (typically `http://localhost:5000` or similar) to view the website.
+
+## What's inside
 - **Notebooks / analysis**: Core analysis and experiments are provided as Jupyter Notebooks (`.ipynb`).
-- **Static files**: HTML and CSS used for visualizations or embedding notebook output in a webpage.
-- **Python helpers**: Small Python scripts may support the notebooks.
+- **Static files**: HTML and CSS used for the interactive website interface.
+- **Python helpers**: `script.py` runs the local server to display the website.
 
-## Getting started
+## Getting started (Advanced)
+
+If you want to work with the Jupyter notebooks directly:
+
 1. Install Python 3.8+ and create a virtual environment:
 
    ```bash
@@ -39,11 +56,6 @@ If you want to export a notebook to HTML for sharing, use:
 ```bash
 jupyter nbconvert --to html path/to/notebook.ipynb
 ```
-
-## Suggested next steps
-- Add a `requirements.txt` or `environment.yml` with exact package versions.
-- Add a short example notebook walkthrough with sample data and expected outputs.
-- Add automated tests for any standalone Python modules, if present.
 
 ## Contributing
 Contributions are welcome. Open an issue or pull request describing your change.
