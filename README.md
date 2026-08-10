@@ -17,7 +17,6 @@ This repository contains an interactive Jupyter Notebook project that explores s
    This will start a local server. Open your browser and navigate to the URL displayed in the terminal (typically `http://localhost:5000` or similar) to view the website.
 
 ## What's inside
-- **Notebooks / analysis**: Core analysis and experiments are provided as Jupyter Notebooks (`.ipynb`).
 - **Static files**: HTML and CSS used for the interactive website interface.
 - **Python helpers**: `script.py` runs the local server to display the website.
 
