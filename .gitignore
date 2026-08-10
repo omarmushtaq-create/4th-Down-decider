@@ -1,0 +1,6 @@
+__pycache__/
+.venv/
+model_trees/
+tree_exports/
+HelloWorld.ipynb
+
