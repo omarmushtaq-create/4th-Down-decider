@@ -1,0 +1,254 @@
+:root {
+  --bg: #f7f0d0;
+  --panel: #fff7d6;
+  --ink: #101010;
+  --accent: #ff5f33;
+  --accent-2: #5d7cff;
+  --shadow: 6px 6px 0 #101010;
+  --surface: #f5f1e2;
+  --muted: #3f3e3c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Inter", "Trebuchet MS", Arial, sans-serif;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), transparent 35%),
+    linear-gradient(180deg, #f7f0d0 0%, #fff9e6 45%, #efe2c5 100%);
+  color: var(--ink);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle at 85% 15%, rgba(93, 124, 255, 0.12) 0%, transparent 20%),
+    radial-gradient(circle at 20% 80%, rgba(255, 95, 51, 0.12) 0%, transparent 18%);
+  pointer-events: none;
+}
+
+.page-shell {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.hero-card,
+.panel {
+  background: var(--panel);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.hero-card {
+  padding: 32px;
+  margin-bottom: 28px;
+  transform: rotate(-1.1deg);
+}
+
+.hero-card p,
+.hero-card h1 {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow,
+.panel-label {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.05;
+}
+
+h1 {
+  font-size: clamp(2.6rem, 5vw, 4.1rem);
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+}
+
+.hero-copy {
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 720px;
+  margin: 0 0 20px;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hero-tags span {
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+  background: #ffd166;
+  font-weight: 700;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  gap: 24px;
+}
+
+.panel {
+  padding: 28px;
+}
+
+.panel-head {
+  margin-bottom: 22px;
+}
+
+.panel h2 {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+}
+
+.calculator-form {
+  display: grid;
+  gap: 16px;
+}
+
+label {
+  display: grid;
+  gap: 10px;
+  font-weight: 700;
+}
+
+label span {
+  font-size: 0.95rem;
+}
+
+input {
+  width: 100%;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: white;
+  font-size: 1rem;
+  color: var(--ink);
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 4px rgba(93, 124, 255, 0.12);
+}
+
+button {
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: var(--accent);
+  color: white;
+  padding: 14px 18px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.metric-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.metric-card {
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  background: white;
+  padding: 22px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.metric-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+.metric-card p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.accent-card {
+  background: linear-gradient(135deg, #5d7cff, #4d61d8);
+  color: white;
+}
+
+.accent-card h3,
+.accent-card p {
+  color: white;
+}
+
+.footnote {
+  margin-top: 22px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-card,
+  .panel {
+    transform: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .page-shell {
+    padding: 24px 16px 40px;
+  }
+
+  .hero-card {
+    padding: 24px;
+  }
+
+  .panel {
+    padding: 22px;
+  }
+
+  input,
+  button {
+    font-size: 0.98rem;
+  }
+}

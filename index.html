@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>4th Down Decider</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="page-shell">
+
+    <header class="hero-card">
+        <p class="eyebrow">
+            NFL Decision Model
+        </p>
+
+        <h1>4TH DOWN DECIDER</h1>
+
+        <p class="hero-copy">
+            Enter the game situation and let the trained
+            Random Forest models compare the expected EPA
+            for going for it, punting, or attempting a
+            field goal.
+        </p>
+
+
+    </header>
+
+
+    <main class="content-grid">
+
+        <section class="panel panel-form">
+
+            <div class="panel-head">
+                <p class="panel-label">
+                    Decision Board
+                </p>
+
+                <h2>Run the numbers</h2>
+            </div>
+
+
+            <form
+                class="calculator-form"
+                id="calculator-form"
+            >
+
+                <label>
+                    <span>Distance to go</span>
+
+                    <input
+                        id="ydstogo"
+                        type="number"
+                        min="1"
+                        placeholder="e.g. 8"
+                        required
+                    >
+                </label>
+
+
+                <label>
+                    <span>Yard line</span>
+
+                    <input
+                        id="yardline_100"
+                        type="number"
+                        min="1"
+                        max="99"
+                        placeholder="e.g. 75"
+                        required
+                    >
+                </label>
+
+
+                <label>
+                    <span>Your points</span>
+
+                    <input
+                        id="your_points"
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 17"
+                        required
+                    >
+                </label>
+
+
+                <label>
+                    <span>Opponent points</span>
+
+                    <input
+                        id="opponent_points"
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 24"
+                        required
+                    >
+                </label>
+
+
+                <label>
+                    <span>Seconds remaining</span>
+
+                    <input
+                        id="seconds_remaining"
+                        type="number"
+                        min="0"
+                        max="3600"
+                        placeholder="e.g. 1800"
+                        required
+                    >
+                </label>
+
+
+                <label>
+                    <span>Your timeouts</span>
+
+                    <input
+                        id="pos_timeouts"
+                        type="number"
+                        min="0"
+                        max="3"
+                        value="3"
+                        required
+                    >
+                </label>
+
+
+                <label>
+                    <span>Opponent timeouts</span>
+
+                    <input
+                        id="def_timeouts"
+                        type="number"
+                        min="0"
+                        max="3"
+                        value="3"
+                        required
+                    >
+                </label>
+
+
+                <button
+                    id="calculate-button"
+                    type="submit"
+                >
+                    Calculate
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <section class="panel">
+
+            <div class="panel-head">
+                <p class="panel-label">
+                    Model Output
+                </p>
+
+                <h2>The call</h2>
+            </div>
+
+
+            <div
+                id="result"
+                class="metric-stack"
+            >
+
+                <div class="metric-card">
+                    <h3>Waiting for a situation</h3>
+
+                    <p>
+                        Enter the game situation and click
+                        Calculate to get a recommendation
+                        from the trained model.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <p class="footnote">
+                The model compares predicted Expected Points
+                Added (EPA) across realistic fourth-down
+                decisions and selects the highest-value option.
+            </p>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    const form = document.getElementById(
+        "calculator-form"
+    );
+
+    const button = document.getElementById(
+        "calculate-button"
+    );
+
+    const resultElement = document.getElementById(
+        "result"
+    );
+
+
+    form.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+            button.disabled = true;
+            button.textContent = "CALCULATING...";
+
+
+            const data = {
+                ydstogo:
+                    document.getElementById(
+                        "ydstogo"
+                    ).value,
+
+                yardline_100:
+                    document.getElementById(
+                        "yardline_100"
+                    ).value,
+
+                your_points:
+                    document.getElementById(
+                        "your_points"
+                    ).value,
+
+                opponent_points:
+                    document.getElementById(
+                        "opponent_points"
+                    ).value,
+
+                seconds_remaining:
+                    document.getElementById(
+                        "seconds_remaining"
+                    ).value,
+
+                pos_timeouts:
+                    document.getElementById(
+                        "pos_timeouts"
+                    ).value,
+
+                def_timeouts:
+                    document.getElementById(
+                        "def_timeouts"
+                    ).value
+            };
+
+
+            try {
+
+                const response = await fetch(
+                    "/calculate",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify(data)
+                    }
+                );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok || result.error) {
+
+                    resultElement.innerHTML = `
+
+                        <div class="metric-card">
+
+                            <h3>
+                                Error
+                            </h3>
+
+                            <p>
+                                ${result.error}
+                            </p>
+
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                let output = `
+
+                    <div class="metric-card accent-card">
+
+                        <h3>
+                            RECOMMENDED DECISION
+                        </h3>
+
+                        <p>
+                            ${result.recommendation.toUpperCase()}
+                        </p>
+
+                    </div>
+
+
+                    <div class="metric-card">
+
+                        <h3>
+                            PREDICTED EPA
+                        </h3>
+
+                        <p>
+                            ${result.best_epa >= 0
+                                ? "+"
+                                : ""
+                            }${result.best_epa.toFixed(3)}
+                            EPA
+                        </p>
+
+                    </div>
+                `;
+
+
+                if (result.margin !== null) {
+
+                    output += `
+
+                        <div class="metric-card">
+
+                            <h3>
+                                ADVANTAGE
+                            </h3>
+
+                            <p>
+                                ${result.margin.toFixed(3)}
+                                EPA over the
+                                second-best option.
+                            </p>
+
+                        </div>
+                    `;
+                }
+
+
+                if (
+                    result.margin !== null &&
+                    result.margin < 0.3
+                ) {
+
+                    output += `
+
+                        <div class="metric-card">
+
+                            <h3>
+                                CLOSE CALL
+                            </h3>
+
+                            <p>
+                                The top two options are
+                                within 0.3 EPA of each
+                                other.
+                            </p>
+
+                        </div>
+                    `;
+                }
+
+
+                result.all_actions.forEach(
+                    function(item) {
+
+                        output += `
+
+                            <div class="metric-card">
+
+                                <h3>
+                                    ${item.action.toUpperCase()}
+                                </h3>
+
+                                <p>
+                                    ${item.epa >= 0
+                                        ? "+"
+                                        : ""
+                                    }${item.epa.toFixed(3)}
+                                    EPA
+                                </p>
+
+                            </div>
+                        `;
+                    }
+                );
+
+
+                resultElement.innerHTML = output;
+
+            }
+
+            catch (error) {
+
+                    console.error(error);
+
+                    resultElement.innerHTML = `
+
+                        <div class="metric-card">
+
+                            <h3>
+                                CONNECTION ERROR
+                            </h3>
+
+                            <p>
+                                Could not connect to the
+                                server. Make sure the
+                                backend is running.
+                            </p>
+
+                        </div>
+                    `;
+                }
+
+                finally {
+                button.textContent = "CALCULATE";
+            }
+
+        }
+        );
+
+</script>
+</body>
+</html>
