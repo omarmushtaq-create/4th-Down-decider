@@ -21,41 +21,6 @@ This repository contains an interactive Jupyter Notebook project that explores s
 - **Static files**: HTML and CSS used for the interactive website interface.
 - **Python helpers**: `script.py` runs the local server to display the website.
 
-## Getting started (Advanced)
-
-If you want to work with the Jupyter notebooks directly:
-
-1. Install Python 3.8+ and create a virtual environment:
-
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # macOS/Linux
-   .venv\Scripts\activate    # Windows (PowerShell)
-   ```
-
-2. Install Jupyter and common data science dependencies. If there is no `requirements.txt`, you can install a useful baseline set:
-
-   ```bash
-   pip install --upgrade pip
-   pip install jupyter pandas numpy matplotlib seaborn scikit-learn
-   ```
-
-3. Launch Jupyter Lab or Notebook and open the repository notebooks:
-
-   ```bash
-   jupyter lab
-   # or
-   jupyter notebook
-   ```
-
-4. Run the notebook cells in order. If a notebook depends on data files, check for a `data/` directory or notes in the first cells describing where to place datasets.
-
-## Reproducing outputs
-If you want to export a notebook to HTML for sharing, use:
-
-```bash
-jupyter nbconvert --to html path/to/notebook.ipynb
-```
 
 ## Contributing
 Contributions are welcome. Open an issue or pull request describing your change.
