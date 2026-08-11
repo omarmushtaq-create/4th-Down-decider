@@ -28,5 +28,3 @@ This repository contains an interactive Jupyter Notebook project that explores s
 ## Contributing
 Contributions are welcome. Open an issue or pull request describing your change.
 
-## License
-No license is currently specified. Add a `LICENSE` file if you want others to reuse or extend the project.
