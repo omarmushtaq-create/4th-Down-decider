@@ -68,14 +68,14 @@
 
 
                 <label>
-                    <span>Yard line</span>
+                    <span>Yard line (1 = your own 1-yard line, 50 = midfield, 99 = opponent 1-yard line)</span>
 
                     <input
                         id="yardline_100"
                         type="number"
                         min="1"
                         max="99"
-                        placeholder="e.g. 75"
+                        placeholder="e.g. 75 (1 = your 1, 99 = opponent 1)"
                         required
                     >
                 </label>
@@ -328,53 +328,43 @@
                 }
 
 
+                // Build exactly four cards: recommended decision (accent),
+                // then the three actions with their EPA values in a fixed order.
+                const actionOrder = [
+                    "Go For It",
+                    "Punt",
+                    "Field Goal"
+                ];
+
                 const cards = [
                     createMetricCard(
                         "RECOMMENDED DECISION",
                         result.recommendation.toUpperCase(),
                         true
-                    ),
-                    createMetricCard(
-                        "PREDICTED EPA",
-                        formatEPA(result.best_epa)
                     )
                 ];
 
-
-                if (result.margin !== null) {
-                    cards.push(
-                        createMetricCard(
-                            "ADVANTAGE",
-                            `${result.margin.toFixed(3)} EPA over the second-best option.`
-                        )
-                    );
+                // Convert all_actions to a lookup for quick access
+                const actionLookup = {};
+                if (Array.isArray(result.all_actions)) {
+                    result.all_actions.forEach(function(item) {
+                        actionLookup[item.action] = item.epa;
+                    });
                 }
 
+                actionOrder.forEach(function(actionName) {
+                    const epa = actionLookup[actionName];
+                    const message = (epa === undefined || epa === null)
+                        ? "N/A"
+                        : formatEPA(epa);
 
-                if (
-                    result.margin !== null &&
-                    result.margin < 0.3
-                ) {
                     cards.push(
                         createMetricCard(
-                            "CLOSE CALL",
-                            "The top two options are within 0.3 EPA of each other."
+                            actionName.toUpperCase(),
+                            message
                         )
                     );
-                }
-
-
-                result.all_actions.forEach(
-                    function(item) {
-                        cards.push(
-                            createMetricCard(
-                                item.action.toUpperCase(),
-                                formatEPA(item.epa)
-                            )
-                        );
-                    }
-                );
-
+                });
 
                 renderCards(cards);
 
@@ -394,6 +384,8 @@
 
                 finally {
                 button.textContent = "CALCULATE";
+                // Re-enable the button so the user can submit again without refreshing.
+                button.disabled = false;
             }
 
         }
