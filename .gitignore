@@ -16,3 +16,4 @@ venv/
 # Local notebook/archive artifacts
 model_trees/
 HelloWorld.ipynb
+.DS_Store
