@@ -217,6 +217,35 @@
         "result"
     );
 
+    function createMetricCard(
+        title,
+        message,
+        accent = false
+    ) {
+        const card = document.createElement("div");
+        card.className = accent
+            ? "metric-card accent-card"
+            : "metric-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent = title;
+
+        const body = document.createElement("p");
+        body.textContent = message;
+
+        card.appendChild(heading);
+        card.appendChild(body);
+        return card;
+    }
+
+    function renderCards(cards) {
+        resultElement.replaceChildren(...cards);
+    }
+
+    function formatEPA(value) {
+        return `${value >= 0 ? "+" : ""}${value.toFixed(3)} EPA`;
+    }
+
 
     form.addEventListener(
         "submit",
@@ -288,77 +317,37 @@
 
 
                 if (!response.ok || result.error) {
-
-                    resultElement.innerHTML = `
-
-                        <div class="metric-card">
-
-                            <h3>
-                                Error
-                            </h3>
-
-                            <p>
-                                ${result.error}
-                            </p>
-
-                        </div>
-                    `;
+                    renderCards([
+                        createMetricCard(
+                            "Error",
+                            result.error
+                        )
+                    ]);
 
                     return;
                 }
 
 
-                let output = `
-
-                    <div class="metric-card accent-card">
-
-                        <h3>
-                            RECOMMENDED DECISION
-                        </h3>
-
-                        <p>
-                            ${result.recommendation.toUpperCase()}
-                        </p>
-
-                    </div>
-
-
-                    <div class="metric-card">
-
-                        <h3>
-                            PREDICTED EPA
-                        </h3>
-
-                        <p>
-                            ${result.best_epa >= 0
-                                ? "+"
-                                : ""
-                            }${result.best_epa.toFixed(3)}
-                            EPA
-                        </p>
-
-                    </div>
-                `;
+                const cards = [
+                    createMetricCard(
+                        "RECOMMENDED DECISION",
+                        result.recommendation.toUpperCase(),
+                        true
+                    ),
+                    createMetricCard(
+                        "PREDICTED EPA",
+                        formatEPA(result.best_epa)
+                    )
+                ];
 
 
                 if (result.margin !== null) {
-
-                    output += `
-
-                        <div class="metric-card">
-
-                            <h3>
-                                ADVANTAGE
-                            </h3>
-
-                            <p>
-                                ${result.margin.toFixed(3)}
-                                EPA over the
-                                second-best option.
-                            </p>
-
-                        </div>
-                    `;
+                    cards.push(
+                        createMetricCard(
+                            "ADVANTAGE",
+                            `${result.margin.toFixed(3)} EPA over the second-best option.`
+                        )
+                    );
                 }
 
 
@@ -366,52 +355,28 @@
                     result.margin !== null &&
                     result.margin < 0.3
                 ) {
-
-                    output += `
-
-                        <div class="metric-card">
-
-                            <h3>
-                                CLOSE CALL
-                            </h3>
-
-                            <p>
-                                The top two options are
-                                within 0.3 EPA of each
-                                other.
-                            </p>
-
-                        </div>
-                    `;
+                    cards.push(
+                        createMetricCard(
+                            "CLOSE CALL",
+                            "The top two options are within 0.3 EPA of each other."
+                        )
+                    );
                 }
 
 
                 result.all_actions.forEach(
                     function(item) {
-
-                        output += `
-
-                            <div class="metric-card">
-
-                                <h3>
-                                    ${item.action.toUpperCase()}
-                                </h3>
-
-                                <p>
-                                    ${item.epa >= 0
-                                        ? "+"
-                                        : ""
-                                    }${item.epa.toFixed(3)}
-                                    EPA
-                                </p>
-
-                            </div>
-                        `;
+                        cards.push(
+                            createMetricCard(
+                                item.action.toUpperCase(),
+                                formatEPA(item.epa)
+                            )
+                        );
                     }
                 );
 
 
-                resultElement.innerHTML = output;
+                renderCards(cards);
 
             }
 
@@ -419,22 +384,12 @@
 
                     console.error(error);
 
-                    resultElement.innerHTML = `
-
-                        <div class="metric-card">
-
-                            <h3>
-                                CONNECTION ERROR
-                            </h3>
-
-                            <p>
-                                Could not connect to the
-                                server. Make sure the
-                                backend is running.
-                            </p>
-
-                        </div>
-                    `;
+                    renderCards([
+                        createMetricCard(
+                            "CONNECTION ERROR",
+                            "Could not connect to the server. Make sure the backend is running."
+                        )
+                    ]);
                 }
 
                 finally {
