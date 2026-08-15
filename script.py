@@ -77,9 +77,9 @@ def recommend_fourth_down(
 
     try:
         situation = [[feature_values[feature] for feature in features]]
-    except KeyError as error:
+    except KeyError:
         return {
-            "error": f"The trained model is missing expected feature: {error}"
+            "error": "The trained model is missing expected features."
         }
 
     predicted_values = {}
@@ -184,14 +184,14 @@ def calculate():
 
         return jsonify(result)
 
-    except KeyError as error:
-        return jsonify({"error": f"Missing value: {error}"}), 400
+    except KeyError:
+        return jsonify({"error": "Missing required value."}), 400
     except ValueError:
         return jsonify({"error": "Please enter valid numbers."}), 400
-    except Exception as error:
-        print(f"Unexpected error: {error}")
-        return jsonify({"error": str(error)}), 500
+    except Exception:
+        print("Unexpected server error.")
+        return jsonify({"error": "An unexpected server error occurred."}), 500
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
