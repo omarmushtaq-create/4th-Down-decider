@@ -1,31 +1,62 @@
-# 4th-Down-decider
+# 4th-Down Decider
 
-This repository contains an interactive Jupyter Notebook project that explores strategies for deciding whether to attempt a 4th down conversion in American football. The primary work is in Jupyter Notebooks, with an interactive website built with HTML, CSS, and Python.
+A small Flask-based web app that recommends a fourth-down decision (Go For It, Punt, or Field Goal) using pre-trained models in `saved_models/`.
 
 ## Quick Start
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/omarmushtaq-create/4th-Down-decider.git
-   cd 4th-Down-decider
-   ```
-2. **Install Required Packages**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 1) Clone and enter the repository
+```bash
+git clone https://github.com/omarmushtaq-create/4th-Down-decider.git
+cd 4th-Down-decider
+```
 
-3. **Run the script**:
-   ```bash
-   python script.py
-   ```
-   This will start a local server. Open your browser and navigate to the URL displayed in the terminal (typically `http://localhost:5000` or similar) to view the website.
+### 2) Create and activate a virtual environment
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
+```
 
-## What's inside
-- **Static files**: HTML and CSS used for the interactive website interface.
-- **Python helpers**: `script.py` runs the local server to display the website.
-- **Model Images**: `/tree_exports` contains pngs of the models trees
+### 3) Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
+### 4) Run the app
+```bash
+python script.py
+```
+Then open `http://127.0.0.1:5000` in your browser.
 
-## Contributing
-Contributions are welcome. Open an issue or pull request describing your change.
+## Development Commands
 
+Install development tools:
+```bash
+pip install -r dev-requirements.txt
+```
+
+Run checks:
+```bash
+ruff check .
+black --check .
+pytest
+```
+
+## Repository Structure
+
+```text
+.
+├── script.py              # Flask app and recommendation endpoint
+├── index.html             # Frontend markup
+├── style.css              # Frontend styles
+├── requirements.txt       # Runtime Python dependencies
+├── dev-requirements.txt   # Lint/format/test tools
+├── pyproject.toml         # Black, Ruff, and Pytest configuration
+├── saved_models/          # Trained model artifacts used by the app
+├── pbp_cache/             # Cached data artifacts
+└── tree_exports/          # Exported model tree images
+```
+
+## Notes
+
+- This repository is configured for local development with Flask's built-in server.
+- Quality tooling config is non-functional and does not change app behavior.
