@@ -23,6 +23,7 @@ This repository contains an interactive Jupyter Notebook project that explores s
 ## What's inside
 - **Static files**: HTML and CSS used for the interactive website interface.
 - **Python helpers**: `script.py` runs the local server to display the website.
+- **Model Images**: `/tree_exports` contains pngs of the models trees
 
 
 ## Contributing
