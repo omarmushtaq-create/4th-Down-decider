@@ -1,5 +1,18 @@
+# Python cache and artifacts
 __pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Virtual environments
 .venv/
+venv/
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Local notebook/archive artifacts
 model_trees/
 HelloWorld.ipynb
-
