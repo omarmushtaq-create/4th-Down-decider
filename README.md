@@ -15,10 +15,7 @@ cd 4th-Down-decider
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 ```
-To turn off venv type 
-```bash
-deactivate
-```
+
 
 ### 3) Install dependencies
 ```bash
@@ -43,6 +40,11 @@ Run checks:
 ruff check .
 black --check .
 pytest
+```
+
+To turn off venv type 
+```bash
+deactivate
 ```
 
 ## Repository Structure
