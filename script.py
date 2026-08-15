@@ -1,7 +1,5 @@
-from flask import Flask, request, jsonify, send_file
-import os
-import pandas as pd
 import joblib
+from flask import Flask, jsonify, request, send_file
 
 app = Flask(__name__)
 
@@ -14,17 +12,27 @@ MODEL_PATHS = {
 
 FEATURES_PATH = f"{MODEL_DIR}/features.joblib"
 
-try:
-    action_models = {
-        action: joblib.load(path)
-        for action, path in MODEL_PATHS.items()
-    }
-    features = joblib.load(FEATURES_PATH)
-    print("Saved models loaded successfully.")
-except FileNotFoundError as error:
-    print(f"ERROR: Could not find a model file: {error}")
-    action_models = {}
-    features = []
+action_models = None
+features = None
+
+
+def load_saved_models():
+    global action_models, features
+
+    if action_models is not None and features is not None:
+        return
+
+    try:
+        action_models = {
+            action: joblib.load(path)
+            for action, path in MODEL_PATHS.items()
+        }
+        features = joblib.load(FEATURES_PATH)
+        print("Saved models loaded successfully.")
+    except FileNotFoundError as error:
+        print(f"ERROR: Could not find a model file: {error}")
+        action_models = {}
+        features = []
 
 
 def recommend_fourth_down(
@@ -40,6 +48,8 @@ def recommend_fourth_down(
     and return the best option.
     """
 
+    load_saved_models()
+
     if not action_models:
         return {
             "error": "The trained models could not be loaded."
@@ -51,19 +61,26 @@ def recommend_fourth_down(
     )
     is_redzone = int(yardline_100 <= 20)
 
-    situation = pd.DataFrame(
-        [[
-            ydstogo,
-            yardline_100,
-            score_differential,
-            seconds_remaining,
-            pos_timeouts,
-            def_timeouts,
-            is_two_minute_drill,
-            is_redzone,
-        ]],
-        columns=features,
-    )
+    feature_values = {
+        "ydstogo": ydstogo,
+        "yardline_100": yardline_100,
+        "score_differential": score_differential,
+        "seconds_remaining": seconds_remaining,
+        "game_seconds_remaining": seconds_remaining,
+        "pos_timeouts": pos_timeouts,
+        "posteam_timeouts_remaining": pos_timeouts,
+        "def_timeouts": def_timeouts,
+        "defteam_timeouts_remaining": def_timeouts,
+        "is_two_minute_drill": is_two_minute_drill,
+        "is_redzone": is_redzone,
+    }
+
+    try:
+        situation = [[feature_values[feature] for feature in features]]
+    except KeyError:
+        return {
+            "error": "The trained model is missing expected features."
+        }
 
     predicted_values = {}
 
@@ -140,7 +157,12 @@ def calculate():
             return jsonify({"error": "Yard line must be between 1 and 99."}), 400
 
         if not 0 <= seconds_remaining <= 3600:
-            return jsonify({"error": "Seconds remaining must be between 0 and 3600."}), 400
+            return (
+                jsonify(
+                    {"error": "Seconds remaining must be between 0 and 3600."}
+                ),
+                400,
+            )
 
         if not 0 <= pos_timeouts <= 3:
             return jsonify({"error": "Your timeouts must be between 0 and 3."}), 400
@@ -162,14 +184,14 @@ def calculate():
 
         return jsonify(result)
 
-    except KeyError as error:
-        return jsonify({"error": f"Missing value: {error}"}), 400
+    except KeyError:
+        return jsonify({"error": "Missing required value."}), 400
     except ValueError:
         return jsonify({"error": "Please enter valid numbers."}), 400
-    except Exception as error:
-        print(f"Unexpected error: {error}")
-        return jsonify({"error": str(error)}), 500
+    except Exception:
+        print("Unexpected server error.")
+        return jsonify({"error": "An unexpected server error occurred."}), 500
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
